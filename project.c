@@ -51,7 +51,8 @@ struct builtin builtins[] = {
     {"cd", shell_cd},
 };
 
-int shell_num_builtins() {
+int shell_num_builtins()
+{
     return sizeof(builtins) / sizeof(struct builtin);
 }
 
@@ -98,11 +99,13 @@ char** tokenize(char *cmdline)
 }
 int execute(char *arglist[])
 {
-	for (int i = 0; i < shell_num_builtins(); i++) {
-        	if (strcmp(arglist[0], builtins[i].name) == 0) {
-            builtins[i].func(arglist);
-            return 0;
-        }
+	for (int i = 0; i < shell_num_builtins(); i++)
+	{
+        	if (strcmp(arglist[0], builtins[i].name) == 0)
+		{
+            		builtins[i].func(arglist);
+            		return 0;
+        	}
 	}
 	int status;
 	int cpid = fork();
@@ -111,13 +114,15 @@ int execute(char *arglist[])
 	 	perror("fork failed!");
 		exit(1);
 	}
-	else if(cpid == 0) {
+	else if(cpid == 0)
+	{
 		
 		execvp(arglist[0], arglist);
 		perror("execvp failed!");
 		exit(2);
 	}
-	else {
+	else
+	{
 		while(wait(&status) != cpid);
 		printf("Child exited with status %d\n", status >> 8);
 		return 0;

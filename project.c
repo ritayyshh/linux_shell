@@ -8,21 +8,28 @@
 #define MAXARGS 10
 #define ARGLEN 30
 
-void shell_exit(char **args) {
+void shell_exit(char **args)
+{
     exit(0);
 }
 
-void shell_cd(char **args) {
-    if (args[1] == NULL) {
+void shell_cd(char **args)
+{
+    if (args[1] == NULL)
+    {
         fprintf(stderr, "shell69: missing argument\n");
-    } else {
-        if (chdir(args[1]) != 0) {
+    }
+    else
+    {
+        if (chdir(args[1]) != 0)
+	{
             perror("shell69: cd");
         }
     }
 }
 
-void shell_help(char **args) {
+void shell_help(char **args)
+{
     char *helptext =
         "Shell69\n"
         "The following commands are available:\n"
@@ -32,7 +39,8 @@ void shell_help(char **args) {
     printf("%s", helptext);
 }
 
-struct builtin {
+struct builtin
+{
     char *name;
     void (*func)(char **args);
 };

@@ -17,7 +17,7 @@ void shell_cd(char **args)
 {
     if (args[1] == NULL)
     {
-        fprintf(stderr, "shell69: missing argument\n");
+        fprintf(stderr, "shell: missing argument\n");
     }
     else
     {

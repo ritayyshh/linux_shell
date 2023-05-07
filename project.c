@@ -91,15 +91,17 @@ char **tokenize(char *cmdline)
 		while (*cp == ' ' || *cp == '\t')
 		{
 			cp++;
-			file_buffer[c++] = *cp;
 		}
 
 		start = cp;
 		file_buffer[c++] = *cp;
 		len = 1;
-		while (*++cp != '\0' && !(*cp == ' ' || *cp == '\t'))
+		while (*++cp != '\0')
 		{
-			len++;
+			while (!(*cp == ' ' || *cp == '\t'))
+			{
+				len++;
+			}
 			file_buffer[c++] = *cp;
 		}
 		strncpy(arglist[argnum], start, len);

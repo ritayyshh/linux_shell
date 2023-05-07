@@ -74,6 +74,9 @@ char *read_cmd(char *prompt, FILE *fp)
 }
 char **tokenize(char *cmdline)
 {
+	int c = 0;
+	char *file_buffer = (char *)malloc(sizeof(char) * 1024 + 1);
+
 	char **arglist = (char **)malloc(sizeof(char *) * MAXARGS + 1);
 	for (int i = 0; i < MAXARGS + 1; i++)
 	{
@@ -88,14 +91,19 @@ char **tokenize(char *cmdline)
 		while (*cp == ' ' || *cp == '\t')
 			cp++;
 		start = cp;
+		file_buffer[c++] = *cp;
 		len = 1;
 		while (*++cp != '\0' && !(*cp == ' ' || *cp == '\t'))
+		{
 			len++;
+			file_buffer[c++] = *cp;
+		}
 		strncpy(arglist[argnum], start, len);
 		arglist[argnum][len] = '\0';
 		argnum++;
 	}
-	arglist[argnum - 1][len] = '\n';
+
+	file_buffer[c] = '\n';
 	arglist[argnum] = NULL;
 	FILE *fp;
 	char buffer[1024];
@@ -114,7 +122,7 @@ char **tokenize(char *cmdline)
 	}
 	if (line_count < MAX_LINES_HISTORY)
 	{
-		fprintf(fp, *arglist);
+		fprintf(fp, file_buffer);
 	}
 
 	// If the number of lines is equal to 20, remove the first line and append the new line
@@ -125,11 +133,9 @@ char **tokenize(char *cmdline)
 		{
 			fgets(buffer, 1024, fp); // Read each line except the first one
 		}
-		freopen(NULL, "w", fp); // Truncate the file
-		fprintf(fp, *arglist);	// Append the new line
+		freopen(NULL, "w", fp);	  // Truncate the file
+		fprintf(fp, file_buffer); // Append the new line
 	}
-
-	arglist[argnum - 1][len] = '\0';
 	return arglist;
 }
 int execute(char *arglist[])

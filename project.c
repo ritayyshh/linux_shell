@@ -98,7 +98,7 @@ char **tokenize(char *cmdline)
 		len = 1;
 		while (*++cp != '\0')
 		{
-			while (!(*cp == ' ' || *cp == '\t'))
+			if (!(*cp == ' ' || *cp == '\t'))
 			{
 				len++;
 			}

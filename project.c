@@ -7,6 +7,7 @@
 #define MAX_LEN 512
 #define MAXARGS 10
 #define ARGLEN 30
+#define MAX_LINES_HISTORY 20
 
 void shell_exit(char **args)
 {
@@ -94,7 +95,41 @@ char **tokenize(char *cmdline)
 		arglist[argnum][len] = '\0';
 		argnum++;
 	}
+	arglist[argnum - 1][len] = '\n';
 	arglist[argnum] = NULL;
+	FILE *fp;
+	char buffer[1024];
+	int line_count = 0;
+	int i;
+
+	if (fp == NULL)
+	{
+		printf("Error opening file.\n");
+		exit(1);
+	}
+	fp = fopen("history.txt", "a+");
+	while (fgets(buffer, 1024, fp) != NULL)
+	{
+		line_count++;
+	}
+	if (line_count < MAX_LINES_HISTORY)
+	{
+		fprintf(fp, *arglist);
+	}
+
+	// If the number of lines is equal to 20, remove the first line and append the new line
+	else
+	{
+		fseek(fp, 0, SEEK_SET); // Move to the beginning of the file
+		for (i = 0; i < line_count - 1; i++)
+		{
+			fgets(buffer, 1024, fp); // Read each line except the first one
+		}
+		freopen(NULL, "w", fp); // Truncate the file
+		fprintf(fp, *arglist);	// Append the new line
+	}
+
+	arglist[argnum - 1][len] = '\0';
 	return arglist;
 }
 int execute(char *arglist[])

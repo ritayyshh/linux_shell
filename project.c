@@ -89,7 +89,11 @@ char **tokenize(char *cmdline)
 	while (*cp != '\0')
 	{
 		while (*cp == ' ' || *cp == '\t')
+		{
 			cp++;
+			file_buffer[c++] = *cp;
+		}
+
 		start = cp;
 		file_buffer[c++] = *cp;
 		len = 1;
